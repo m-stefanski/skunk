@@ -25,7 +25,7 @@ Data sheets for used components are available in [datasheets](/datasheets) direc
 
 ## Software
 
-Project is developed in [MicroPython](https://micropython.org). All sources are available in [src](/src) directory.
+Project is developed in [MicroPython](https://micropython.org). All sources are available in [src](/src) directory. All binaries are stored in [bin](/bin) directory. 
 
 ## Designs
 
@@ -35,4 +35,6 @@ So far, only breadboard designed is finished, with parts on their way to complet
 
 All hardware designs are stored in [board](/board) directory.
 
-## 
+## HowTos
+
+All of HowTo's are saved in [docs](/docs) directory.
