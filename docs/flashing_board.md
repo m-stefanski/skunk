@@ -1,5 +1,5 @@
 
-# Running first code
+# Flashing board
 
 In case of my device (MacOS Big Sur), driver was alread embedded in os, and port was `/dev/cu.usbserial-1420`
 
