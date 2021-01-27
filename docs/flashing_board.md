@@ -3,6 +3,13 @@
 
 In case of my device (MacOS Big Sur), driver was alread embedded in os, and port was `/dev/cu.usbserial-1420`
 
+Python3 is required, and the easiest way to install it on macOS is brew:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install python
+```
+
 To program, esptool was used:
 
 ```
