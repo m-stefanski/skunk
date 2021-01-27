@@ -34,7 +34,7 @@ print("[wifi]: AP created - SSID: {}, pass: {}, gateway: {}".format(WIFI_SSID, W
 print("[skunk]: Startup finished")
 
 def web_page():
-  return web_templates.parse_template('index.html', temp=bme.temperature, humid=bme.humidity, press=bme.pressure)
+  return web_templates.parse_template('index.html', temp=bme.temperature, humid=bme.humidity, press=bme.pressure, dew=bme.dew_point)
 
 webs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 webs.bind(('', 80))

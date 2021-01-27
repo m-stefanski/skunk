@@ -285,3 +285,13 @@ class BME280:
     hi = h // 1024
     hd = h * 100 // 1024 - hi * 100
     return "{}.{:02d}".format(hi, hd)
+
+  @property
+  def dew_point(self):
+    "Return the dew point in degrees, precise to around 1 degree if RH > 50%."
+    t = self.read_temperature()
+    h = self.read_humidity()
+    t_d = t - ((100 - (h // 1024)) // 5) * 100
+    td_i = t_d // 100
+    # td_d = t_d - td_i * 100 
+    return "{}".format(td_i)
