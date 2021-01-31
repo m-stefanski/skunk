@@ -23,25 +23,12 @@ Results are available as a website presented when user connects to a WiFi networ
 
 Data sheets for used components are available in [datasheets](/datasheets) directory.
 
-## Software
-
-Project is developed in [MicroPython](https://micropython.org). All sources are available in [src](/src) directory. All binaries are stored in [bin](/bin) directory. 
-
-This code is a heavy copy-paste job from several, very useful reporitories:
-
-* [DNS and HTTP servers](https://github.com/amora-labs/micropython-captive-portal)
-* [BME280 module](https://github.com/RuiSantosdotme/ESP-MicroPython/blob/master/code/WiFi/HTTP_Client_IFTTT_BME280/BME280.py)
-
 ## Designs
+
+All sources are available in [src](/src) directory. All binaries are stored in [bin](/bin) directory. 
 
 So far, only breadboard designed is finished, with parts on their way to complete the prototype. 
 
 ![prototype 1 bb](docs/prototype_1_bb.png)
 
 All hardware designs are stored in [board](/board) directory.
-
-## HowTos
-
-All of HowTo's are saved in [docs](/docs) directory.
-
-* [Flashing WeMOS D1 Mini](/docs/flashing_board.md)
