@@ -29,6 +29,6 @@ All sources are available in [src](/src) directory. All binaries are stored in [
 
 So far, only breadboard designed is finished, with parts on their way to complete the prototype. 
 
-![prototype 1 bb](docs/prototype_1_bb.png)
+![prototype_bb](docs/prototype_bb.png)
 
 All hardware designs are stored in [board](/board) directory.
