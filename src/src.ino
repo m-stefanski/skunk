@@ -5,16 +5,19 @@
 #include <Adafruit_BME280.h>
 
 #include <ESP8266WiFi.h>
-#include <DNSServer.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266TimerInterrupt.h>
+/// #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 
-const char *ssid = "skun.ks"; // network name
-const char *localdomain = "skun.ks"; // dns domain name
+const char *ssid = "skunks"; // network name
+const char *localdomain = "skunks"; // dns domain name
 IPAddress apIP(192, 168, 4, 1); // ip address
 
-DNSServer dnsServer;
+// DNSServer dnsServer;
 Adafruit_BME280 bme;
 ESP8266WebServer server(80);
+ESP8266Timer timer;
 
 void setup() {
   Serial.begin(115200);
@@ -22,7 +25,7 @@ void setup() {
   Serial.println("[app] Starting");
   setup_bme280();
   setup_ap();
-  setup_dns();
+  timer.setInterval(1000 * 1000, setup_dns);
   setup_spiffs();
   setup_web();
   Serial.println("[app] Skunks ready");
@@ -30,7 +33,8 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  dnsServer.processNextRequest();
+  MDNS.update();
+  // dnsServer.processNextRequest();
 }
 
 void cls() {
@@ -66,11 +70,14 @@ void setup_ap() {
 
 void setup_dns() {
   Serial.println("[dns] Setting up...");
-  dnsServer.setTTL(300);
-  dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
-  dnsServer.start(53, localdomain, apIP);
+  //dnsServer.setTTL(300);
+  //dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
+  //dnsServer.start(53, localdomain, apIP);
+  MDNS.begin(localdomain);
+  MDNS.addService("http", "tcp", 80);
   Serial.print("[dns] Server exposed on: ");
-  Serial.println(localdomain);
+  Serial.print(localdomain);
+  Serial.println(".local");
 }
 
 void setup_spiffs() { 
