@@ -82,18 +82,30 @@ void setup_spiffs() {
 }
 
 void setup_web() {
-  Serial.println("[www] Setting up...");
+  Serial.println("[www] Setting up endpoints...");
   server.on("/", handleRoot);
+  server.on("/style.css", handleCSS);
+  server.on("/favicon.png", handleFavicon);
   server.on("/sensors/", handleSensors);
   server.on("/storage/", handleStorage);
   server.begin();
   Serial.println("[www] Server running on port 80");
 }
 
-void handleRoot() {
-  const char *body = "<html><head><title>Skun.ks - handheld air monitor</title><meta charset=\"UTF-8\"></head><style type=\"text/css\"> body { font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;} table { border: 1px solid dimgray;border-collapse: collapse;} td { border: 1px solid dimgray;} </style><body><h1>Skun.ks</h1><table><tr><td>Temperature:</td><td><span class=\"value\" id=\"temp\">#temp#</span> &#176;C</td></tr><tr><td>Humidity:</td><td><span class=\"value\" id=\"humid\">#humid#</span> %</td></tr><tr><td>Pressure:</td><td><span class=\"value\" id=\"pres\">#press#</span> hPa</td></tr></table></body><script> function reload_data () { var xhr = new XMLHttpRequest();xhr.onreadystatechange = function(){ if (xhr.readyState === 4){ var params = JSON.parse(xhr.responseText);document.getElementById('temp').innerHTML = params.temperature;document.getElementById('humid').innerHTML = params.humidity;document.getElementById('pres').innerHTML = params.pressure;} };xhr.open('GET', '/sensors/');xhr.send();} setInterval(reload_data, 1000);</script></html>";
-  server.send(200, "text/html", body);
-}
+const char index_html[] PROGMEM = { 
+  #include "index.html.h" 
+  };
+void handleRoot() { server.send(200, "text/html", index_html, sizeof(index_html)); }
+
+const char style_css[] PROGMEM = { 
+  #include "style.css.h" 
+  };
+void handleCSS() { server.send(200, "text/css", style_css, sizeof(style_css)); }
+
+const char favicon_png[] PROGMEM = { 
+  #include "favicon.png.h" 
+  };
+void handleFavicon() { server.send(200, "image/png", favicon_png, sizeof(favicon_png)); }
 
 void handleSensors() {
   server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + "}");

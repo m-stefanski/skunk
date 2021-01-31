@@ -1,3 +1,5 @@
 .DS_Store
 
 drafts/
+bin2array/
+src/*.h

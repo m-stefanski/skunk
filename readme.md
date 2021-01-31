@@ -25,10 +25,18 @@ Data sheets for used components are available in [datasheets](/datasheets) direc
 
 ## Designs
 
-All sources are available in [src](/src) directory. All binaries are stored in [bin](/bin) directory. 
+All sources are available in [src](/src) directory. Web content needs to be converted to `.h` files:
+
+```
+git clone https://github.com/Jamesits/bin2array.git 
+cd ./src/web_content
+find . -iname "*.*"  -type f -exec python3 ./../../bin2array/bin2array.py '{}' -O ./../'{}'.h \;
+```
 
 So far, only breadboard designed is finished, with parts on their way to complete the prototype. 
 
 ![prototype_bb](docs/prototype_bb.png)
 
 All hardware designs are stored in [board](/board) directory.
+
+Skunk icon is stored in [icon](/icon) directory. It is a skunk glyph from OpenMoji project, with added background. Due to limited space it is exported as 4-bit grayscale 180x180 px.
