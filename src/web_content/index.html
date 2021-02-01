@@ -38,7 +38,7 @@
         var params = JSON.parse(xhr.responseText);
         document.getElementById('temp').innerHTML = params.temperature.toFixed(1) + "&#176;C";
         document.getElementById('humid').innerHTML = params.humidity.toFixed(1) + "%";
-        document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + "hPa";
+        document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + " hPa";
         var now = new Date();
         document.getElementById('status').innerHTML = "Last update: "+ now.toTimeString();
         document.getElementById('error').style.display = "none";
