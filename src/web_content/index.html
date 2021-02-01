@@ -30,9 +30,9 @@
     xhr.onreadystatechange = function(){
       if (xhr.readyState === 4){
         var params = JSON.parse(xhr.responseText);
-        document.getElementById('temp').innerHTML = params.temperature;
-        document.getElementById('humid').innerHTML = params.humidity;
-        document.getElementById('pres').innerHTML = params.pressure;
+        document.getElementById('temp').innerHTML = params.temperature.toFixed(1);
+        document.getElementById('humid').innerHTML = params.humidity.toFixed(1);
+        document.getElementById('pres').innerHTML = params.pressure.toFixed(1);
       }
     };
     xhr.open('GET', '/sensors/');
