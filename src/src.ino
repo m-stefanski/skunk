@@ -89,6 +89,7 @@ void setup_web() {
   server.on("/", handleRoot);
   server.on("/style.css", handleCSS);
   server.on("/favicon.png", handleFavicon);
+  server.on("/skunk.svg", handleSVGIcon);
   server.on("/sensors/", handleSensors);
   server.on("/storage/", handleStorage);
   server.begin();
@@ -109,6 +110,11 @@ const char favicon_png[] PROGMEM = {
   #include "favicon.png.h" 
   };
 void handleFavicon() { server.send(200, "image/png", favicon_png, sizeof(favicon_png)); }
+
+const char skunk_svg[] PROGMEM = { 
+  #include "skunk.svg.h" 
+  };
+void handleSVGIcon() { server.send(200, "image/svg+xml", skunk_svg, sizeof(skunk_svg)); }
 
 void handleSensors() {
   server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + "}");

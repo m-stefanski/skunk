@@ -1,8 +1,20 @@
 body {
   font-family: sans-serif;
 }
-h1 {
+.header {
   text-align: center;
+}
+.header h1, img {
+  display: inline;
+}
+.header h1 {
+  vertical-align: middle;
+  margin-left: -0.4em;
+}
+.header img {
+  height: 4em;
+  width: 4em;
+  vertical-align: middle;
 }
 table {
   border-collapse: collapse;
