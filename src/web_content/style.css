@@ -1,35 +1,59 @@
 body {
   font-family: sans-serif;
 }
+
 .header {
   text-align: center;
 }
+
 .header h1, img {
   display: inline;
 }
+
 .header h1 {
   vertical-align: middle;
   margin-left: -0.4em;
 }
+
 .header img {
   height: 4em;
   width: 4em;
   vertical-align: middle;
 }
+
 table {
   border-collapse: collapse;
   table-layout: fixed;
   width: 100%;
 }
+
 tr{
   border-bottom: 1px solid #dddddd;
 }
+
 tr:nth-child(even) { 
   background-color: #eeeeee; 
 }
+
 td:nth-child(2) {
   text-align: right
 }
+
 .value {
   font-family: monospace;
+}
+
+.status {
+  text-align: center;
+  margin-top: 1em;
+  font-size: smaller;
+}
+
+.error {
+  border: 1px solid red;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #ffaaaa;
+  color: red;
+  margin-bottom: 1em;
 }

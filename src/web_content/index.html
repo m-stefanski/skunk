@@ -15,17 +15,18 @@
     <table>
       <tr>
         <td>Temperature</td>
-        <td class="value"><span id="temp">-</span>&#176;C</td>
+        <td class="value"><span id="temp">-</span></td>
       </tr>
       <tr>
         <td>Humidity</td>
-        <td class="value"><span id="humid">-</span>%</td>
+        <td class="value"><span id="humid">-</span></td>
       </tr>
       <tr>
         <td>Pressure</td>
-        <td class="value"><span id="pres">-</span> hPa</td>
+        <td class="value"><span id="pres">-</span></td>
       </tr>
     </table>
+    <div class='status' id='status'></div>
   </body>
   <script>
   function reload_data () {
@@ -33,10 +34,16 @@
     xhr.onreadystatechange = function(){
       if (xhr.readyState === 4){
         var params = JSON.parse(xhr.responseText);
-        document.getElementById('temp').innerHTML = params.temperature.toFixed(1);
-        document.getElementById('humid').innerHTML = params.humidity.toFixed(1);
-        document.getElementById('pres').innerHTML = params.pressure.toFixed(1);
+        document.getElementById('temp').innerHTML = params.temperature.toFixed(1) + "&#176;C";
+        document.getElementById('humid').innerHTML = params.humidity.toFixed(1) + "%";
+        document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + "hPa";
+        var now = new Date();
+        document.getElementById('status').innerHTML = "Last update: "+ now.toTimeString();
+        document.getElementById('error').style.display = "none";
       }
+    };
+    xhr.onerror = function () {
+      document.getElementById('error').style.display = "block";
     };
     xhr.open('GET', '/sensors/');
     xhr.send();
