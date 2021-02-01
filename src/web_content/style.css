@@ -50,10 +50,10 @@ td:nth-child(2) {
 }
 
 .error {
-  border: 1px solid red;
-  border-radius: 8px;
+  border: 1px solid #842029;
+  border-radius: .5em;
   text-align: center;
   background-color: #ffaaaa;
-  color: red;
+  color: #842029;
   margin-bottom: 1em;
 }
