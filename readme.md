@@ -1,6 +1,6 @@
-# Skunk!
+# Skunks
 
-Skunk is a small air quality meter aimed at developing countries, home projects and in every place where affordable air quality meter might be necessary. 
+Skunks (Polish for Skunk) is a small air quality meter aimed for use in developing countries, home projects and in every place where affordable air quality meter might be useful. 
 
 It is designed to be cheap and easy to make from over-the-counter parts.
 
