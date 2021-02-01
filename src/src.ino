@@ -5,16 +5,16 @@
 #include <Adafruit_BME280.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
 #include <ESP8266TimerInterrupt.h>
-/// #include <DNSServer.h>
+#include <DNSServer.h>
 #include <ESP8266WebServer.h>
 
+const int ADVERTISE_MDNS = 5;
 const char *ssid = "skunks"; // network name
-const char *localdomain = "skunks"; // dns domain name
+const char *hostname = "skunks"; // dns domain name
 IPAddress apIP(192, 168, 4, 1); // ip address
 
-// DNSServer dnsServer;
+DNSServer dnsServer;
 Adafruit_BME280 bme;
 ESP8266WebServer server(80);
 ESP8266Timer timer;
@@ -25,7 +25,7 @@ void setup() {
   Serial.println("[app] Starting");
   setup_bme280();
   setup_ap();
-  timer.setInterval(1000 * 1000, setup_dns);
+  setup_dns();
   setup_spiffs();
   setup_web();
   Serial.println("[app] Skunks ready");
@@ -33,8 +33,7 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  MDNS.update();
-  // dnsServer.processNextRequest();
+  dnsServer.processNextRequest();
 }
 
 void cls() {
@@ -57,7 +56,8 @@ void setup_bme280() {
 
 void setup_ap() {
   Serial.println("[wifi] Setting up...");
-  WiFi.mode(WIFI_AP_STA);
+  WiFi.hostname(hostname);
+  WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(ssid);
   IPAddress myIP = WiFi.softAPIP();
@@ -69,15 +69,11 @@ void setup_ap() {
 }
 
 void setup_dns() {
-  Serial.println("[dns] Setting up...");
-  //dnsServer.setTTL(300);
-  //dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
-  //dnsServer.start(53, localdomain, apIP);
-  MDNS.begin(localdomain);
-  MDNS.addService("http", "tcp", 80);
-  Serial.print("[dns] Server exposed on: ");
-  Serial.print(localdomain);
-  Serial.println(".local");
+  Serial.println("[dns] Serring up DNS...");
+  dnsServer.setTTL(300);
+  dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
+  dnsServer.start(53, hostname, apIP);
+  Serial.println(String("[dns] create entry for: ") + hostname);
 }
 
 void setup_spiffs() { 
