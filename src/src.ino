@@ -87,9 +87,11 @@ void setup_spiffs() {
 void setup_web() {
   Serial.println("[www] Setting up endpoints...");
   server.on("/", handleRoot);
+  server.on("/index.html", handleRoot);
   server.on("/style.css", handleCSS);
   server.on("/favicon.png", handleFavicon);
   server.on("/skunk.svg", handleSVGIcon);
+  server.on("/cache.manifest", handleCacheM);
   server.on("/sensors/", handleSensors);
   server.on("/storage/", handleStorage);
   server.begin();
@@ -115,6 +117,11 @@ const char skunk_svg[] PROGMEM = {
   #include "skunk.svg.h" 
   };
 void handleSVGIcon() { server.send(200, "image/svg+xml", skunk_svg, sizeof(skunk_svg)); }
+
+const char cache_manifest[] PROGMEM = { 
+  #include "cache.manifest.h" 
+  };
+void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, sizeof(cache_manifest)); }
 
 void handleSensors() {
   server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + "}");
