@@ -1,5 +1,5 @@
 body {
-  font-family: "San Francisco", Helvetica, Arial, sans-serif;
+  font-family: sans-serif;
 }
 h1 {
   text-align: center;
@@ -14,7 +14,10 @@ tr{
 }
 tr:nth-child(even) { 
   background-color: #eeeeee; 
-} 
-.theader {
-  font-weight: bold;
+}
+td:nth-child(2) {
+  text-align: right
+}
+.value {
+  font-family: monospace;
 }
