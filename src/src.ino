@@ -10,6 +10,9 @@
 #include <ESP8266WebServer.h>
 
 const int ADVERTISE_MDNS = 5;
+const int DUST_ANALOG = A0; 
+const int DUST_LED = D5;
+
 const char *ssid = "skunks"; // network name
 const char *hostname = "skunks"; // dns domain name
 IPAddress apIP(192, 168, 4, 1); // ip address
@@ -24,6 +27,7 @@ void setup() {
   cls();
   Serial.println("[app] Starting");
   setup_bme280();
+  setup_dustmeter();
   setup_ap();
   setup_dns();
   setup_web();
@@ -40,6 +44,10 @@ void cls() {
   Serial.print("[2J");
   Serial.write(27);
   Serial.print("[H");
+}
+
+void setup_dustmeter() {
+  pinMode(DUST_LED, OUTPUT);
 }
 
 void setup_bme280() {
@@ -113,6 +121,31 @@ const char cache_manifest[] PROGMEM = {
   };
 void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, sizeof(cache_manifest)); }
 
-void handleSensors() {
-  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + "}");
+float read_dustmeter() {
+  float voltsMeasured = 0;
+  float calcVoltage = 0;
+  float dustDensitySum = 0;
+  float dustDensity = 0;
+
+  for(int i=0; i<10; i++){
+    digitalWrite(DUST_LED, LOW);
+    delayMicroseconds(280);
+    voltsMeasured = analogRead(DUST_ANALOG);
+    delayMicroseconds(40);
+    digitalWrite(DUST_LED, HIGH); 
+    delayMicroseconds(9680);
+    calcVoltage = voltsMeasured * (3.3 / 1024.0);
+    dustDensity = ( 0.17 * calcVoltage - 0.1);
+    Serial.println(String("[dust] Measure ") + i + " - raw Analog: " + voltsMeasured + ", Voltage: " + calcVoltage + ", dust: " + dustDensity);
+    dustDensitySum += dustDensity;
+  }
+
+  dustDensity = dustDensitySum / 10.0F;
+  Serial.println(String("[dust] Calculated dust: ") + dustDensity);
+  return dustDensity;
 }
+
+void handleSensors() {
+  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + + ", \"dust_pm25\": " + read_dustmeter() + "}");
+}
+
