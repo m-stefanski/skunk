@@ -27,10 +27,26 @@
         <td>Pressure</td>
         <td class="value"><span id="pres">-</span></td>
       </tr>
+      <tr>
+        <td>Uptime</td>
+        <td class="value"><span id="uptime">-</span></td>
+      </tr>
     </table>
     <div class='status' id='status'></div>
   </body>
   <script>
+  function pad_00(num){
+    return("00"  + num).slice(-2);
+  }
+
+  function returnElapsedTime(epoch) {
+    var days = epoch / (3600 * 1000 * 24),
+        hours = (days % 1) * 24,
+        minutes = (hours % 1) * 60,
+        seconds = (minutes % 1) * 60;
+    return Math.floor(hours) + "d, "  + pad_00(Math.floor(hours)) + ":" + pad_00(Math.floor(minutes)) + ":" + pad_00(Math.round(seconds));
+  }
+
   function reload_data () {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
@@ -39,6 +55,7 @@
         document.getElementById('temp').innerHTML = params.temperature.toFixed(1) + "&#176;C";
         document.getElementById('humid').innerHTML = params.humidity.toFixed(1) + "%";
         document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + " hPa";
+        document.getElementById('uptime').innerHTML = returnElapsedTime(params.uptime);
         var now = new Date();
         document.getElementById('status').innerHTML = "Last update: "+ now.toTimeString();
         document.getElementById('error').style.display = "none";

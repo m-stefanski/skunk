@@ -26,7 +26,6 @@ void setup() {
   setup_bme280();
   setup_ap();
   setup_dns();
-  setup_spiffs();
   setup_web();
   Serial.println("[app] Skunks ready");
 }
@@ -76,14 +75,6 @@ void setup_dns() {
   Serial.println(String("[dns] create entry for: ") + hostname);
 }
 
-void setup_spiffs() { 
-  Serial.println("[spiffs] Setting up...");
-  if(!SPIFFS.begin()){ 
-    Serial.println("[spiffs] ERROR");  
-  }
-  Serial.println("[spiffs] Ready");
-}
-
 void setup_web() {
   Serial.println("[www] Setting up endpoints...");
   server.on("/", handleRoot);
@@ -93,7 +84,6 @@ void setup_web() {
   server.on("/skunk.svg", handleSVGIcon);
   server.on("/cache.manifest", handleCacheM);
   server.on("/sensors/", handleSensors);
-  server.on("/storage/", handleStorage);
   server.begin();
   Serial.println("[www] Server running on port 80");
 }
@@ -124,11 +114,5 @@ const char cache_manifest[] PROGMEM = {
 void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, sizeof(cache_manifest)); }
 
 void handleSensors() {
-  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + "}");
-}
-
-void handleStorage() {
-  FSInfo fs_info;
-  SPIFFS.info(fs_info);
-  server.send(200, "application/json", String("{\"total_kb\": ") + fs_info.totalBytes / 1024.0F + ", \"used_kb\": " + fs_info.usedBytes / 1024.0F + ", \"free_kb\": " + (fs_info.totalBytes - fs_info.usedBytes) / 1024.0F + "}");
+  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + "}");
 }
