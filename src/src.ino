@@ -134,9 +134,11 @@ float read_dustmeter() {
     delayMicroseconds(40);
     digitalWrite(DUST_LED, HIGH); 
     delayMicroseconds(9680);
-    calcVoltage = voltsMeasured * (3.3 / 1024.0);
-    dustDensity = ( 0.17 * calcVoltage - 0.1);
-    Serial.println(String("[dust] Measure ") + i + " - raw Analog: " + voltsMeasured + ", Voltage: " + calcVoltage + ", dust: " + dustDensity);
+    // voltage given as 0-1023 as a fraction of 3.3 V
+    calcVoltage = voltsMeasured / 1024 * 3.3;
+    // 0.5V for each 100 ug/m3
+    dustDensity = calcVoltage / 0.5 * 100;
+    Serial.println(String("[dust] Measure ") + i + " - raw Analog: " + voltsMeasured + ", dust: " + dustDensity);
     dustDensitySum += dustDensity;
   }
 
