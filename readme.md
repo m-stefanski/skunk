@@ -33,10 +33,10 @@ cd ./src/web_content
 find . -iname "*.*"  -type f -exec python3 ./../../bin2array/bin2array.py '{}' -O ./../'{}'.h \;
 ```
 
-So far, only breadboard designed is finished, with parts on their way to complete the prototype. 
+BB overview is shown below.
 
-![prototype_bb](docs/prototype_bb.png)
+![](docs/prototype_bb_BME280_GP2Y1010AU0F.png)
 
-All hardware designs are stored in [board](/board) directory.
+All hardware designs are stored in [board](/board) directory. Old iterations are kept as well, should the hardware change.
 
 Skunk icon is stored in [icon](/icon) directory. It is a skunk glyph from [OpenMoji](https://openmoji.org) with added background. Due to limited space it is exported as 4-bit grayscale 180x180 px.
