@@ -28,6 +28,8 @@
         <td class="value"><span id="pres">-</span></td>
       </tr>
       <tr>
+        <td>PM<sub>2.5</sub></td>
+        <td class="value"><span id="pm25">-</span></td>
       </tr>
       <tr>
         <td>Battery</td>
@@ -61,6 +63,7 @@
         document.getElementById('temp').innerHTML = params.temperature.toFixed(1) + "&#176;C";
         document.getElementById('humid').innerHTML = params.humidity.toFixed(1) + "%";
         document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + " hPa";
+        document.getElementById('pm25').innerHTML = params.pm25.toFixed(1) + "  &#181;g/m<sup>3</sup>";
         document.getElementById('voltage').innerHTML = params.voltage.toFixed(2) + " V";
         document.getElementById('uptime').innerHTML = returnElapsedTime(params.uptime);
         var now = new Date();
@@ -74,6 +77,6 @@
     xhr.open('GET', '/sensors/');
     xhr.send();
   }
-  setInterval(reload_data, 1000);
+  setInterval(reload_data, 1000*2);
   </script>
 </html>

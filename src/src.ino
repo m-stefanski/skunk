@@ -5,10 +5,15 @@
 #include <Adafruit_BME280.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266TimerInterrupt.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
+#include "DSM501.h"
+#include <Ticker.h>
 
+#define DSM501_PM1_0 D5
+#define DSM501_PM2_5 D7
+#define SAMPLE_TIME_DSM510 30
+#define SAMPLE_TIME_BME280 2
 
 const int VOLT_ANALOG = A0; 
 
@@ -18,14 +23,21 @@ IPAddress apIP(192, 168, 4, 1); // ip address
 
 DNSServer dnsServer;
 Adafruit_BME280 bme;
+DSM501 dsm501;
 ESP8266WebServer server(80);
-ESP8266Timer timer;
+Ticker timer;
+
+int pm25 = 0;
+float temperature = 0;
+float humidity = 0;
+float pressure = 0;
 
 void setup() {
   Serial.begin(115200);
   cls();
   Serial.println("[app] Starting");
   setup_bme280();
+  setup_dsm501a();
   setup_ap();
   setup_dns();
   setup_web();
@@ -35,6 +47,7 @@ void setup() {
 void loop() {
   server.handleClient();
   dnsServer.processNextRequest();
+  read_dsm501a();
 }
 
 void cls() {
@@ -42,10 +55,6 @@ void cls() {
   Serial.print("[2J");
   Serial.write(27);
   Serial.print("[H");
-}
-
-void setup_dustmeter() {
-  pinMode(DUST_LED, OUTPUT);
 }
 
 void setup_bme280() {
@@ -56,7 +65,30 @@ void setup_bme280() {
     Serial.println("[bme280] ERROR: device not found!");
     while (1); // stopping the program
   }
+  Serial.println("[bme280] Setting repeated measures");
+  timer.attach(SAMPLE_TIME_BME280, read_bme280);
   Serial.println("[bme280] Ready");
+}
+
+void setup_dsm501a() {
+  Serial.println("[dsm501a] Setting up...");
+  dsm501.begin(DSM501_PM1_0, DSM501_PM2_5, SAMPLE_TIME_DSM510);
+  Serial.println("[dsm501a] Ready");
+}
+
+void read_dsm501a(){
+  if (dsm501.update())
+  { 
+    pm25 = dsm501.getConcentration();
+    Serial.println(String("[dsm501a] Read: PM1: ") + dsm501.getParticleCount(0) + ", PM2.5: " + dsm501.getParticleCount(1) + ", concentration: " + dsm501.getConcentration());
+  } 
+}
+
+void read_bme280(){
+  temperature = bme.readTemperature();
+  pressure = bme.readPressure() / 100.0F;
+  humidity = bme.readHumidity();
+  Serial.println(String("[bme280] Read: temperature: ") + temperature  + "*C, humidity: " + humidity + "%, pressure: " + pressure + " hPa");
 }
 
 void setup_ap() {
@@ -121,11 +153,18 @@ void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, si
 
 float read_voltage() {
   float voltageRead = analogRead(VOLT_ANALOG);
-  Serial.println(voltageRead);
   return voltageRead / 1024 * 3.3;
 }
 
 void handleSensors() {
-  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + + ", \"voltage\": " + read_voltage() + "}");
+  server.send(
+    200, "application/json", 
+    String("{\"temperature\": ") + temperature + 
+    ", \"pressure\": " + pressure + 
+    ", \"humidity\": " + humidity + 
+    ", \"uptime\": " + millis() + 
+    ", \"voltage\": " + read_voltage() +
+    ", \"pm25\": " + pm25 +
+    "}");
 }
 
