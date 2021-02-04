@@ -28,8 +28,10 @@
         <td class="value"><span id="pres">-</span></td>
       </tr>
       <tr>
-        <td>PM 2.5</td>
-        <td class="value"><span id="dust_pm25">-</span></td>
+      </tr>
+      <tr>
+        <td>Battery</td>
+        <td class="value"><span id="voltage">-</span></td>
       </tr>
       <tr>
         <td>Uptime</td>
@@ -59,7 +61,7 @@
         document.getElementById('temp').innerHTML = params.temperature.toFixed(1) + "&#176;C";
         document.getElementById('humid').innerHTML = params.humidity.toFixed(1) + "%";
         document.getElementById('pres').innerHTML = params.pressure.toFixed(1) + " hPa";
-        document.getElementById('dust_pm25').innerHTML = params.dust_pm25.toFixed(1) + " &#181;g/m<sup>3</sup>";
+        document.getElementById('voltage').innerHTML = params.voltage.toFixed(2) + " V";
         document.getElementById('uptime').innerHTML = returnElapsedTime(params.uptime);
         var now = new Date();
         document.getElementById('status').innerHTML = "Last update: "+ now.toTimeString();

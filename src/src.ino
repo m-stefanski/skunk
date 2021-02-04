@@ -9,9 +9,8 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 
-const int ADVERTISE_MDNS = 5;
-const int DUST_ANALOG = A0; 
-const int DUST_LED = D5;
+
+const int VOLT_ANALOG = A0; 
 
 const char *ssid = "skunks"; // network name
 const char *hostname = "skunks"; // dns domain name
@@ -27,7 +26,6 @@ void setup() {
   cls();
   Serial.println("[app] Starting");
   setup_bme280();
-  setup_dustmeter();
   setup_ap();
   setup_dns();
   setup_web();
@@ -121,33 +119,13 @@ const char cache_manifest[] PROGMEM = {
   };
 void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, sizeof(cache_manifest)); }
 
-float read_dustmeter() {
-  float voltsMeasured = 0;
-  float calcVoltage = 0;
-  float dustDensitySum = 0;
-  float dustDensity = 0;
-
-  for(int i=0; i<10; i++){
-    digitalWrite(DUST_LED, LOW);
-    delayMicroseconds(280);
-    voltsMeasured = analogRead(DUST_ANALOG);
-    delayMicroseconds(40);
-    digitalWrite(DUST_LED, HIGH); 
-    delayMicroseconds(9680);
-    // voltage given as 0-1023 as a fraction of 3.3 V
-    calcVoltage = voltsMeasured / 1024 * 3.3;
-    // 0.5V for each 100 ug/m3
-    dustDensity = calcVoltage / 0.5 * 100;
-    Serial.println(String("[dust] Measure ") + i + " - raw Analog: " + voltsMeasured + ", dust: " + dustDensity);
-    dustDensitySum += dustDensity;
-  }
-
-  dustDensity = dustDensitySum / 10.0F;
-  Serial.println(String("[dust] Calculated dust: ") + dustDensity);
-  return dustDensity;
+float read_voltage() {
+  float voltageRead = analogRead(VOLT_ANALOG);
+  Serial.println(voltageRead);
+  return voltageRead / 1024 * 3.3;
 }
 
 void handleSensors() {
-  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + + ", \"dust_pm25\": " + read_dustmeter() + "}");
+  server.send(200, "application/json", String("{\"temperature\": ") + bme.readTemperature() + ", \"pressure\": " + bme.readPressure() / 100.0F + ", \"humidity\": " + bme.readHumidity() + ", \"uptime\": " + millis() + + ", \"voltage\": " + read_voltage() + "}");
 }
 
