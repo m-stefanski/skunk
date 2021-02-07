@@ -1,5 +1,7 @@
 body {
   font-family: sans-serif;
+  color: #000000;
+  background-color: #ffffff;
 }
 
 .header {
@@ -27,15 +29,21 @@ table {
   width: 100%;
 }
 
-tr{
-  border-bottom: 1px solid #dddddd;
-}
-
 tr:nth-child(even) { 
   background-color: #eeeeee; 
 }
 
+td {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+td:first-child {
+  padding-left: 0.8em;
+}
+
 td:nth-child(2) {
+  padding-right: 0.8em;
   text-align: right
 }
 
@@ -56,4 +64,26 @@ td:nth-child(2) {
   background-color: #ffaaaa;
   color: #842029;
   margin-bottom: 1em;
+}
+
+.accordion {
+  background-color: #ccc;
+  text-align: left;
+  font-weight: bold;
+  padding: 0.4em;
+}
+
+.panel {
+  background-color: white;
+  display: none;
+}
+
+.accordion:after {
+  content: '\02795';
+  font-size: 13px;
+  float: right;
+}
+
+.active:after {
+  content: "\2796";
 }
