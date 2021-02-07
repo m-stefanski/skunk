@@ -12,10 +12,11 @@
 
 #define DSM501_PM1_0 D5
 #define DSM501_PM2_5 D7
+#define PIN_BATTERY_VOLTAGE A0
+
 #define SAMPLE_TIME_DSM510 30
 #define SAMPLE_TIME_BME280 2
-
-const int VOLT_ANALOG = A0; 
+#define SAMPLE_TIME_VOLTAGE 1
 
 const char *ssid = "skunks"; // network name
 const char *hostname = "skunks"; // dns domain name
@@ -25,9 +26,11 @@ DNSServer dnsServer;
 Adafruit_BME280 bme;
 DSM501 dsm501;
 ESP8266WebServer server(80);
-Ticker timer;
+Ticker timer_voltage;
+Ticker timer_bme280;
 
 int pm25 = 0;
+float battery_voltage = 0;
 float temperature = 0;
 float humidity = 0;
 float pressure = 0;
@@ -36,6 +39,7 @@ void setup() {
   Serial.begin(115200);
   cls();
   Serial.println("[app] Starting");
+  setup_voltage();
   setup_bme280();
   setup_dsm501a();
   setup_ap();
@@ -66,7 +70,7 @@ void setup_bme280() {
     while (1); // stopping the program
   }
   Serial.println("[bme280] Setting repeated measures");
-  timer.attach(SAMPLE_TIME_BME280, read_bme280);
+  timer_bme280.attach(SAMPLE_TIME_BME280, read_bme280);
   Serial.println("[bme280] Ready");
 }
 
@@ -74,6 +78,12 @@ void setup_dsm501a() {
   Serial.println("[dsm501a] Setting up...");
   dsm501.begin(DSM501_PM1_0, DSM501_PM2_5, SAMPLE_TIME_DSM510);
   Serial.println("[dsm501a] Ready");
+}
+
+void setup_voltage() {
+  Serial.println("[volt] Setting up...");
+  timer_voltage.attach(SAMPLE_TIME_VOLTAGE, read_voltage);
+  Serial.println("[volt] Ready");
 }
 
 void read_dsm501a(){
@@ -89,6 +99,12 @@ void read_bme280(){
   pressure = bme.readPressure() / 100.0F;
   humidity = bme.readHumidity();
   Serial.println(String("[bme280] Read: temperature: ") + temperature  + "*C, humidity: " + humidity + "%, pressure: " + pressure + " hPa");
+}
+
+void read_voltage() {
+  float calculated_voltage = analogRead(PIN_BATTERY_VOLTAGE) / 1024 * 3.3;
+  battery_voltage = calculated_voltage;
+  Serial.println(String("[volt] voltage: ") + battery_voltage + " V");
 }
 
 void setup_ap() {
@@ -151,11 +167,6 @@ const char cache_manifest[] PROGMEM = {
   };
 void handleCacheM() { server.send(200, "text/cache-manifest", cache_manifest, sizeof(cache_manifest)); }
 
-float read_voltage() {
-  float voltageRead = analogRead(VOLT_ANALOG);
-  return voltageRead / 1024 * 3.3;
-}
-
 void handleSensors() {
   server.send(
     200, "application/json", 
@@ -163,8 +174,7 @@ void handleSensors() {
     ", \"pressure\": " + pressure + 
     ", \"humidity\": " + humidity + 
     ", \"uptime\": " + millis() + 
-    ", \"voltage\": " + read_voltage() +
+    ", \"voltage\": " + battery_voltage +
     ", \"pm25\": " + pm25 +
     "}");
 }
-
