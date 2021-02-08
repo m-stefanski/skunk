@@ -28,6 +28,7 @@ table {
   border-width: 0.1em;
   border-color: #ccc;
   border-style: solid;
+  border-top: none;
   table-layout: fixed;
   width: 100%;
 }
