@@ -9,6 +9,7 @@
 #include <ESP8266WebServer.h>
 #include "DSM501.h"
 #include <Ticker.h>
+#include <EEPROM.h>
 
 #define DSM501_PM1_0 D5
 #define DSM501_PM2_5 D7
@@ -39,6 +40,7 @@ void setup() {
   Serial.begin(115200);
   cls();
   Serial.println("[app] Starting");
+  setup_eeprom(512);
   setup_voltage();
   setup_bme280();
   setup_dsm501a();
@@ -46,6 +48,30 @@ void setup() {
   setup_dns();
   setup_web();
   Serial.println("[app] Skunks ready");
+}
+
+void write_string_to_eeprom(int pos, String str) {
+  for (int i = 0; i < str.length(); ++i)
+    {
+      EEPROM.write(i, str[i]);
+    }
+  EEPROM.write(str.length(), 0x00);
+  EEPROM.commit();
+  Serial.println(String("[eeprom] Wrote ") + str.length() + " bytes at pos: " + pos);
+}
+
+String read_string_from_eeprom(int pos) {
+  String str;
+  int pos_act = pos;
+  uint8_t next_char = 0;
+  do {
+    next_char = EEPROM.read(pos_act);
+    str += char(next_char);
+    pos_act++;
+  }
+  while (next_char != 0);
+  Serial.println(String("[eeprom] Read ") + str.length() + " bytes at pos: " + pos);
+  return str;
 }
 
 void loop() {
@@ -59,6 +85,13 @@ void cls() {
   Serial.print("[2J");
   Serial.write(27);
   Serial.print("[H");
+}
+
+void setup_eeprom(int size) {
+  Serial.println("[eeprom] Initializing ...");
+  EEPROM.begin(size);
+  delay(50); // without a delay eeprom r/w may result in an error
+  Serial.println(String("[eeprom] Initialized size: ") + size);
 }
 
 void setup_bme280() {
