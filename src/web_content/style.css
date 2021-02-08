@@ -25,12 +25,20 @@ body {
 
 table {
   border-collapse: collapse;
+  border-width: 0.1em;
+  border-color: #ccc;
+  border-style: solid;
   table-layout: fixed;
   width: 100%;
 }
 
 tr:nth-child(even) { 
   background-color: #eeeeee; 
+}
+
+tr:last-child { 
+  border-bottom-left-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
 }
 
 td {
@@ -60,6 +68,7 @@ td:nth-child(2) {
 .error {
   border: 1px solid #842029;
   border-radius: .5em;
+  padding: .25em;
   text-align: center;
   background-color: #ffaaaa;
   color: #842029;
@@ -67,9 +76,17 @@ td:nth-child(2) {
 }
 
 .accordion {
+  border-radius: .5em;
   background-color: #ccc;
   font-weight: bold;
-  padding: 0.4em;
+  font-size: large;
+  padding: 0.5em;
+  padding-bottom: 0.3em;
+}
+
+.active {
+  border-bottom-left-radius: 0em;
+  border-bottom-right-radius: 0em;
 }
 
 .panel {
@@ -84,4 +101,9 @@ td:nth-child(2) {
 
 .active:after {
   content: "\2796";
+}
+
+.section {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
