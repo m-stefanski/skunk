@@ -56,6 +56,44 @@
         </table>
       </div>
     </div>
+    <div class="section">
+      <div class="accordion">Settings</div>
+      <div class="panel">
+        <form>
+          <table>
+            <tr>
+              <tr>
+                <td>Network type</td>
+                <td>
+                  <select id="net_type" name="net_type">
+                    <option value="ap">Host own network</option>
+                    <option value="wlan">Join existing WLAN</option>
+                  </select>
+                </td>
+              </tr>
+              <td>WLAN SSID</td>
+              <td>
+                <select id="cust_ssid" name="ssid">
+                  <option value="-">-</option>
+                </select>
+                <div class="value" id="own_ssid">Skunks</div>
+              </td>
+            </tr>
+            <tr>
+              <td>WLAN Password</td>
+              <td>
+                <input type="password" id="cust_pass" maxlength="63">
+                <div class="value" id="own_pass">(none)</div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button type="submit">Save settings</td>
+            </tr>
+          </table>
+
+        </form>
+    </div>
   </body>
   <script>
   function pad_00(num){
@@ -93,6 +131,20 @@
     xhr.send();
   }
   setInterval(reload_data, 1000*2);
+
+  document.getElementById("net_type").addEventListener("change", function() {
+    if (this.value == "ap") {
+      var cust = "none";
+      var own = "";
+    } else {
+      var cust = "";
+      var own = "none";
+    }
+    document.getElementById("cust_ssid").style.display = cust;
+    document.getElementById("cust_pass").style.display = cust;
+    document.getElementById("own_ssid").style.display = own;
+    document.getElementById("own_pass").style.display = own;
+  });
 
   var acc = document.getElementsByClassName("accordion");
   var i;
