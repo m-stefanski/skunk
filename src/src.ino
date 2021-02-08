@@ -102,7 +102,7 @@ void read_bme280(){
 }
 
 void read_voltage() {
-  float calculated_voltage = analogRead(PIN_BATTERY_VOLTAGE) / 1024 * 3.3;
+  float calculated_voltage = analogRead(PIN_BATTERY_VOLTAGE) / 1024.0F * 3.3;
   battery_voltage = calculated_voltage;
   Serial.println(String("[volt] voltage: ") + battery_voltage + " V");
 }
