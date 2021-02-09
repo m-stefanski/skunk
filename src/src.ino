@@ -11,8 +11,8 @@
 #include <Ticker.h>
 #include <EEPROM.h>
 
-#define DSM501_PM1_0 D5
-#define DSM501_PM2_5 D7
+#define DSM501_PM2_5 D5 // pin 4 - Vout1 - over 2.5 um
+#define DSM501_PM1_0 D6 // pin 2 - Vout2 - over 1 um
 #define PIN_BATTERY_VOLTAGE A0
 
 #define SAMPLE_TIME_DSM510 30
