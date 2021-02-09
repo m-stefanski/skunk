@@ -53,9 +53,9 @@ void setup() {
 void write_string_to_eeprom(int pos, String str) {
   for (int i = 0; i < str.length(); ++i)
     {
-      EEPROM.write(i, str[i]);
+      EEPROM.write(i + pos, str[i]);
     }
-  EEPROM.write(str.length(), 0x00);
+  EEPROM.write(str.length(), 0xFF);
   EEPROM.commit();
   Serial.println(String("[eeprom] Wrote ") + str.length() + " bytes from pos: " + pos);
 }
@@ -64,14 +64,17 @@ String read_string_from_eeprom(int pos) {
   String str;
   int pos_act = pos;
   uint8_t next_char = 0;
-  do {
+  while (true) {
     next_char = EEPROM.read(pos_act);
+    if (next_char != 0xFF){
     str += char(next_char);
     pos_act++;
   }
-  while (next_char != 0);
-  Serial.println(String("[eeprom] Read ") + (str.length()-1) + " bytes from pos: " + pos);
+    else {
+      Serial.println(String("[eeprom] Read ") + str.length() + " bytes from pos: " + pos + ": " + str);
   return str;
+}
+  }
 }
 
 void loop() {
