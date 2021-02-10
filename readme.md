@@ -45,6 +45,11 @@ PCB:
 
 ![](docs/prototype_pcb_BME280_DSM501.png)
 
+And very, VERY unholy real photos of firts prototype:
+
+![](docs/prototype_bb_BME280_DSM501_live1.png)
+![](docs/prototype_bb_BME280_DSM501_live2.png)
+
 All hardware designs are stored in [board](/board) directory. Old iterations are kept as well, should the hardware change.
 
 Skunk icon is stored in [icon](/icon) directory. It is a skunk glyph from [OpenMoji](https://openmoji.org) with added background. Due to limited space it is exported as 4-bit grayscale 180x180 px.
