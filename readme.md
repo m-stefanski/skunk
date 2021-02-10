@@ -35,11 +35,15 @@ find . -iname "*.*"  -type f -exec python3 ./../../bin2array/bin2array.py '{}' -
 
 BB overview is shown below.
 
-![](docs/prototype_bb_BME280_GP2Y1010AU0F.png)
+![](docs/prototype_bb_BME280_DSM501.png)
 
 Electrical schematics:
 
-![](docs/prototype_electrical_BME280_GP2Y1010AU0F.png)
+![](docs/prototype_electrical_BME280_DSM501.png)
+
+PCB:
+
+![](docs/prototype_pcb_BME280_DSM501.png)
 
 All hardware designs are stored in [board](/board) directory. Old iterations are kept as well, should the hardware change.
 
